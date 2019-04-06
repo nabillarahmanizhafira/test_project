@@ -18,7 +18,9 @@ type HTTPBidHandler struct {
 // GetProductHandler willreturn product with specific ID
 func (h *HTTPBidHandler) GetProductHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	var resp response.HandlerResponse
-	res, err := h.BController.GetByID("nabey")
+	queryValues := r.URL.Query()
+	ID := queryValues.Get("id")
+	res, err := h.BController.GetByID(ID)
 	if err != nil {
 		log.Error(err, "error while fetching the product", res)
 		resp.StatusCode = http.StatusInternalServerError

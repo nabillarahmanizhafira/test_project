@@ -16,7 +16,7 @@ func (p *PkgMemCache) Get(key string) (value string, err error) {
 }
 
 //Set value with key
-func (p *PkgMemCache) Set(key string, value string, ttl ...int) (err error) {
+func (p *PkgMemCache) Set(key string, value string, ttl int) (err error) {
 	return
 }
 

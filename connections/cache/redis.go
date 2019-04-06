@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -74,19 +75,18 @@ func (p *PkgRedis) Ping() error {
 }
 
 // Set will set value to key with ttl
-func (p *PkgRedis) Set(key, value string, ttl ...int) (err error) {
-	conn, err := p.rpool.Dial()
-	if err != nil {
-		log.Println("Failed to dial connection from connection pool. ", err)
-		return err
+func (p *PkgRedis) Set(key, value string, ttl int) (err error) {
+	conn := p.rpool.Get()
+	if conn == nil {
+		err = fmt.Errorf("Err no pool")
+		return
 	}
 	defer conn.Close()
 
-	_, err = conn.Do("SET", key, value, ttl)
-	if err != nil {
-		log.Println("Failed to send Set command. ", err)
-		return err
+	conn.Send("SET", key, value)
+	if ttl > 0 {
+		conn.Send("EXPIRE", key, ttl)
 	}
-
+	err = conn.Flush()
 	return
 }

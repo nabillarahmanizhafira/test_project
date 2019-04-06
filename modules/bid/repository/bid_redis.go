@@ -26,49 +26,6 @@ func (bc *bidRedis) GetByID(ID string) (res models.Product, err error) {
 }
 
 func (bc *bidRedis) SetProduct(ID, value string) (err error) {
+	err = bc.redisConn.Set(ID, value, 3600)
 	return
 }
-
-// // ProductBid will increase value by 1
-// func ProductBid(productID string, bidPrice string) error {
-// 	redisConn, err := configs.GlobalConfig.GetRedisConn()
-// 	if err != nil {
-// 		log.Println("Cannot get redis connection from redis. Error : ", err)
-// 		return err
-// 	}
-// 	sortedSetKey := constructRedisKey(productID)
-
-// 	err = redisConn.ZIncrBy(sortedSetKey, 1, bidPrice)
-// 	if err != nil {
-// 		log.Println("Cannot ZIncrBy. Error : ", err)
-// 		return err
-// 	}
-
-// 	return nil
-// }
-
-// // GetProduct will return product based on ID
-// func GetProduct(productID string) (int, error) {
-// 	redisConn, err := configs.GlobalConfig.GetRedisConn()
-// 	if err != nil {
-// 		log.Println("Cannot get redis connection from redis. Error : ", err)
-// 		return -1, err
-// 	}
-// 	sortedSetKey := constructRedisKey(productID)
-
-// 	val, err := redisConn.Zrange(sortedSetKey, 0, 1, false)
-// 	if err != nil {
-// 		log.Println("Cannot ZIncrBy. Error : ", err)
-// 		return -1, err
-// 	}
-// 	var winner int
-// 	if len(val) > 0 {
-// 		winner, _ = strconv.Atoi(val[0])
-// 	}
-
-// 	return winner, nil
-// }
-
-// func constructRedisKey(productID string) string {
-// 	return fmt.Sprintf("HCK:BID:%s", productID)
-// }
