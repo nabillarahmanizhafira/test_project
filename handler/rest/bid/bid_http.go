@@ -1,8 +1,8 @@
 package bid
 
 import (
+	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/nabillarahmanizhafira/test_project/common/log"
@@ -18,7 +18,7 @@ type HTTPBidHandler struct {
 // GetProductHandler willreturn product with specific ID
 func (h *HTTPBidHandler) GetProductHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	var resp response.HandlerResponse
-	res, err := h.BController.GetByID(1)
+	res, err := h.BController.GetByID("nabey")
 	if err != nil {
 		log.Error(err, "error while fetching the product", res)
 		resp.StatusCode = http.StatusInternalServerError
@@ -28,6 +28,7 @@ func (h *HTTPBidHandler) GetProductHandler(w http.ResponseWriter, r *http.Reques
 	}
 	resp.StatusCode = http.StatusOK
 	resp.Message = res
+	response.WriteAPIStandard(w, resp, err)
 	return
 }
 
@@ -36,24 +37,26 @@ func (h *HTTPBidHandler) ProductBidHandler(w http.ResponseWriter, r *http.Reques
 	var resp response.HandlerResponse
 	r.ParseMultipartForm(2 << 23)
 
-	productID, err := strconv.Atoi(r.PostForm.Get("product_id"))
-	if err != nil {
-		log.Error(err, "error while parse the productID", productID)
+	productID := r.PostForm.Get("product_id")
+	if productID == "" {
+		err := fmt.Errorf("product id can't be empty")
+		log.Error(err)
 		resp.StatusCode = http.StatusBadRequest
 		resp.Message = "Bad request"
 		response.WriteAPIStandard(w, resp, err)
 		return
 	}
-	value, err := strconv.Atoi(r.PostForm.Get("value"))
-	if err != nil {
-		log.Error(err, "error while parse the product", value)
+	value := r.PostForm.Get("value")
+	if value == "" {
+		err := fmt.Errorf("value can't be empty")
+		log.Error(err)
 		resp.StatusCode = http.StatusBadRequest
 		resp.Message = "Bad request"
 		response.WriteAPIStandard(w, resp, err)
 		return
 	}
 
-	err = h.BController.SetProduct(productID, value)
+	err := h.BController.SetProduct(productID, value)
 	if err != nil {
 		log.Error(err, "Error while setting the bid")
 		resp.StatusCode = http.StatusInternalServerError
@@ -67,21 +70,3 @@ func (h *HTTPBidHandler) ProductBidHandler(w http.ResponseWriter, r *http.Reques
 	response.WriteAPIStandard(w, resp, err)
 	return
 }
-
-// func bidProductHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) error {
-// 	r.ParseMultipartForm(2 << 23)
-
-// 	//TODO: Convert ke int
-// 	productID := r.PostForm.Get("product_id")
-// 	price := r.PostForm.Get("price")
-
-// 	err := bid.BidProduct(productID, price)
-// 	if err != nil {
-// 		w.WriteHeader(500)
-// 		w.Write([]byte("Internal Server Error"))
-// 	}
-
-// 	w.Write([]byte("OK"))
-
-// 	return nil
-// }

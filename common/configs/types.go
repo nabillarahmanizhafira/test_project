@@ -23,7 +23,7 @@ type (
 
 	// AppConfig will hold connection
 	AppConfig struct {
-		cache cache.Cache
+		redis cache.Cache
 	}
 )
 

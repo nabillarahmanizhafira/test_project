@@ -16,10 +16,12 @@ func NewBidController(bRepo bid.Repository) bid.Controller {
 	}
 }
 
-func (bc *bidController) GetByID(ID int) (res models.Product, err error) {
+func (bc *bidController) GetByID(ID string) (res models.Product, err error) {
+	res, err = bc.bidRepository.GetByID(ID)
 	return
 }
 
-func (bc *bidController) SetProduct(ID, value int) (err error) {
+func (bc *bidController) SetProduct(ID, value string) (err error) {
+	err = bc.bidRepository.SetProduct(ID, value)
 	return
 }

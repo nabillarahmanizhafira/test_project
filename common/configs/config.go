@@ -46,15 +46,15 @@ func InitRedisConn() {
 		log.Error(err, "failed parse pool size")
 		poolSize = 5
 	}
-	GlobalConfig.cache = cache.NewRedis(VarsConfig.Redis.Host, poolSize)
+	GlobalConfig.redis = cache.NewRedis(VarsConfig.Redis.Host, poolSize)
 }
 
 // GetRedisConn will return redisConn
 func (pkg *AppConfig) GetRedisConn() (redisConn cache.Cache) {
-	if pkg.cache == nil {
+	if pkg.redis == nil {
 		log.Fatal("redis conn hasn't been initialized")
 	}
 
-	redisConn = pkg.cache
+	redisConn = pkg.redis
 	return
 }

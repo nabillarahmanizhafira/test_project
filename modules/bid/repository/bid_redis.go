@@ -18,11 +18,14 @@ func NewBidRedis() bid.Repository {
 	}
 }
 
-func (bc *bidRedis) GetByID(ID int) (res models.Product, err error) {
+func (bc *bidRedis) GetByID(ID string) (res models.Product, err error) {
+	val, err := bc.redisConn.Get(ID)
+	res.ID = ID
+	res.Value = val
 	return
 }
 
-func (bc *bidRedis) SetProduct(ID, value int) (err error) {
+func (bc *bidRedis) SetProduct(ID, value string) (err error) {
 	return
 }
 

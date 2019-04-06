@@ -6,6 +6,6 @@ import (
 
 // Controller represent the bid's controller
 type Controller interface {
-	GetByID(int) (models.Product, error)
-	SetProduct(int, int) error
+	GetByID(string) (models.Product, error)
+	SetProduct(string, string) error
 }

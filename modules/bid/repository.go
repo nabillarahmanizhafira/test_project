@@ -6,6 +6,6 @@ import (
 
 // Repository represent the bid's repository contract
 type Repository interface {
-	GetByID(int) (models.Product, error)
-	SetProduct(int, int) error
+	GetByID(string) (models.Product, error)
+	SetProduct(string, string) error
 }
